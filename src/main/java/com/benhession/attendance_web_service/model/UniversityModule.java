@@ -1,7 +1,7 @@
 package com.benhession.attendance_web_service.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -24,6 +24,10 @@ public class UniversityModule {
     @Column(name = "module_name")
     private String moduleName;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "module")
     private Set<UniversityClass> classes;
+
+
 }

@@ -1,5 +1,6 @@
 package com.benhession.attendance_web_service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

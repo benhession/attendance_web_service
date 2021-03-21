@@ -1,9 +1,11 @@
 package com.benhession.attendance_web_service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vladmihalcea.hibernate.type.interval.PostgreSQLIntervalType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -14,6 +16,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "class")
+@TypeDef(typeClass = PostgreSQLIntervalType.class, defaultForType = Duration.class)
 public class UniversityClass {
 
     @Id
@@ -28,6 +31,7 @@ public class UniversityClass {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
+    @Column(name = "duration", columnDefinition = "interval")
     private Duration duration;
 
     @Column(name = "class_type")
@@ -45,6 +49,8 @@ public class UniversityClass {
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToMany(mappedBy = "classes")
     private Set<Student> students;
 
