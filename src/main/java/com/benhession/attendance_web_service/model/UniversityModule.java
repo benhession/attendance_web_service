@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@IdClass(ModuleKey.class)
+@IdClass(UniversityModuleId.class)
 @Table(name = "module")
 public class UniversityModule {
 

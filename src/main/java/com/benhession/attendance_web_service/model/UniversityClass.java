@@ -21,6 +21,7 @@ public class UniversityClass {
 
     @Id
     @EqualsAndHashCode.Include
+    @Column(name = "class_id")
     private String classId;
 
     @Column(name = "class_name")
@@ -51,8 +52,8 @@ public class UniversityClass {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(mappedBy = "classes")
-    private Set<Student> students;
+    @OneToMany(mappedBy = "universityClass")
+    private Set<StudentUniversityClass> students;
 
 
 }

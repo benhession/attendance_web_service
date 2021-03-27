@@ -1,6 +1,5 @@
 package com.benhession.attendance_web_service.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,11 +24,8 @@ public class Student {
     @NonNull
     private String surname;
 
-    @ManyToMany
-    @JoinTable(name = "student_class",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id"))
-    private Set<UniversityClass> classes;
+    @OneToMany(mappedBy = "student")
+    private Set<StudentUniversityClass> classes;
 
 
 }
