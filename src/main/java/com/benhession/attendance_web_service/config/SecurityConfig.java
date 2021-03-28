@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf(c -> c.ignoringAntMatchers("/home"))
 
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/home", "home/**").hasRole("attendance_student")
+                        .antMatchers("/home", "home/**")
+                            .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
 
@@ -52,6 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             authJSONArr.forEach(auth -> grantedAuthorities.add(
                     new SimpleGrantedAuthority("ROLE_" + auth.toString()))
             );
+        }
+
+        if (claims.containsKey("scope")) {
+            String scope = (String) claims.get("scope");
+            grantedAuthorities.add(new SimpleGrantedAuthority("SCOPE_" + scope));
         }
 
         return grantedAuthorities;

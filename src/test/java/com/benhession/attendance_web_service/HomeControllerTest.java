@@ -19,21 +19,28 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles = "attendance_student")
+    @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"})
     public void userShouldHaveStudentAuthorisation() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/home"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockUser(roles = "attendance_tutor")
+    @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_web_client"})
+    public void clientShouldHaveMobileScope() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/home"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ROLE_attendance_tutor", "SCOPE_mobile_client"})
     public void userWithTutorAuthorisationIsUnauthorised() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/home"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
-    @WithMockUser(roles = "attendance_student")
+    @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"})
     public void shouldReturnDefaultMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/home"))
                 .andDo(MockMvcResultHandlers.print())
