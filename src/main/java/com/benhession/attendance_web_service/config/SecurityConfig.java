@@ -23,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+                .csrf(c -> c.ignoringAntMatchers("/home"))
+
                 .authorizeRequests(auth -> auth
                         .antMatchers("/home", "home/**").hasRole("attendance_student")
                         .anyRequest().authenticated()
