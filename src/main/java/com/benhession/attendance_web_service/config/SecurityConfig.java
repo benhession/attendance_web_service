@@ -12,9 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -56,10 +54,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         if (claims.containsKey("scope")) {
-            String scope = (String) claims.get("scope");
-            grantedAuthorities.add(new SimpleGrantedAuthority("SCOPE_" + scope));
+            String scopes = (String) claims.get("scope");
+            List<String> scopeList = Arrays.asList(scopes.split(" "));
+
+            scopeList.forEach(scope -> grantedAuthorities.add(new SimpleGrantedAuthority("SCOPE_" + scope)));
+
         }
 
         return grantedAuthorities;
     }
+
 }
