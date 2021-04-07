@@ -1,7 +1,7 @@
 insert into student (student_id, forename, surname) values
-    ('yarrowP3138', 'Peter', 'Yarrow'),
-    ('traversM0936', 'Mary', 'Travers'),
-    ('stookeyP3037', 'Paul', 'Stookey')
+    ('yarrowp3138', 'Peter', 'Yarrow'),
+    ('traversm0936', 'Mary', 'Travers'),
+    ('stookeyp3037', 'Paul', 'Stookey')
 on conflict do nothing;
 
 insert into tutor (tutor_id, forename, surname) values
@@ -24,10 +24,10 @@ insert into class (class_id, class_name, location, date_time, duration,
  on conflict do nothing;
 
 insert into student_class (student_id, class_id, attended) values
-    ('yarrowP3138', 'TM4702101', true),
-    ('yarrowP3138', 'TM4702102', true),
-    ('yarrowP3138', 'TM4702103', false),
-    ('traversM0936', 'TM4702101', false),
-    ('traversM0936', 'TM4702102', true),
-    ('traversM0936', 'TM4702103', false)
+    ('yarrowp3138', 'TM4702101', true),
+    ('yarrowp3138', 'TM4702102', true),
+    ('yarrowp3138', 'TM4702103', false),
+    ('traversm0936', 'TM4702101', false),
+    ('traversm0936', 'TM4702102', true),
+    ('traversm0936', 'TM4702103', false)
 on conflict do nothing;
