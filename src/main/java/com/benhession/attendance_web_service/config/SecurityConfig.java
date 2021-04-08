@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf(c -> c.ignoringAntMatchers("/home"))
 
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/home", "home/**")
+                        .antMatchers("/home", "home/**", "/student", "student/**")
                             .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
