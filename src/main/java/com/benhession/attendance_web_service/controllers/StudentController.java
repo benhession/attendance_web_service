@@ -3,6 +3,8 @@ package com.benhession.attendance_web_service.controllers;
 import com.benhession.attendance_web_service.data.StudentService;
 import com.benhession.attendance_web_service.model.Student;
 import com.benhession.attendance_web_service.model.StudentUniversityClass;
+import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModel;
+import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModelAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,17 +36,17 @@ public class StudentController {
     }
 
     @GetMapping("/classes")
-    public ResponseEntity<Set<StudentUniversityClass>> getClassesOfStudent(@AuthenticationPrincipal Jwt principal) {
+    public ResponseEntity<Set<StudentUniversityClassModel>> getClassesOfStudent(@AuthenticationPrincipal Jwt principal) {
 
         String studentId = principal.getClaim("user_name");
-
-        System.out.println(studentId);
 
         Optional<Set<StudentUniversityClass>> studentClasses =
                 Optional.ofNullable(studentService.universityClassesOfRequester(studentId));
 
         return studentClasses.map(
-                studentUniversityClasses -> new ResponseEntity<>(studentUniversityClasses, HttpStatus.OK)
+                studentUniversityClasses ->
+                        new ResponseEntity<>(StudentUniversityClassModelAssembler
+                                .toCollection(studentUniversityClasses) , HttpStatus.OK)
         ).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
 
 
