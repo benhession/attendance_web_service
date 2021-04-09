@@ -3,7 +3,6 @@ package com.benhession.attendance_web_service.config;
 
 import net.minidev.json.JSONArray;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,24 +20,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .csrf(c -> c.ignoringAntMatchers("/home"))
+                .csrf(c -> c.ignoringAntMatchers("/home", "/student/classes"))
 
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/home", "home/**", "/student", "student/**")
+                        .antMatchers("/home", "/student/classes")
                             .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
 
                 .oauth2ResourceServer().jwt()
-                        .jwtAuthenticationConverter(getJwtAuthenticationConverter());
+                        .jwtAuthenticationConverter(this::getJwtAuthenticationConverter);
     }
 
-    private Converter<Jwt, ? extends AbstractAuthenticationToken> getJwtAuthenticationConverter() {
+    private AbstractAuthenticationToken getJwtAuthenticationConverter(Jwt jwt) {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
 
         converter.setJwtGrantedAuthoritiesConverter(this::getGrantedAuthorities);
+        converter.setPrincipalClaimName("user_name");
 
-        return converter;
+        return converter.convert(jwt);
     }
 
     private Set<GrantedAuthority> getGrantedAuthorities(Jwt jwt) {
@@ -63,5 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         return grantedAuthorities;
     }
+
 
 }
