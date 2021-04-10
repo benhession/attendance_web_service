@@ -39,7 +39,7 @@ public class StudentController {
 
         String studentId = principal.getName();
 
-        if (studentId == null) {
+        if (studentId == null  || !studentService.existsById(studentId)) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
 
