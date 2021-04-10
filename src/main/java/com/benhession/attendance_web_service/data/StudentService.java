@@ -27,6 +27,10 @@ public class StudentService {
         return classes.isEmpty() ? null : classes;
     }
 
+    public Boolean existsById(String studentId) {
+        return studentRepository.existsById(studentId);
+    }
+
     public Set<Student> findAllStudents() {
 
         Set<Student> students = new HashSet<>();
