@@ -3,6 +3,7 @@ package com.benhession.attendance_web_service.config;
 
 import net.minidev.json.JSONArray;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,10 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .csrf(c -> c.ignoringAntMatchers("/home", "/student/classes"))
+                .csrf().disable()
 
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/home", "/student/classes")
+                        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .antMatchers("/student/classes")
                             .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
