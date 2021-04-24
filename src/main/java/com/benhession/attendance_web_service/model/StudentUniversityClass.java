@@ -26,5 +26,4 @@ public class StudentUniversityClass {
     @Column(name = "attended")
     @EqualsAndHashCode.Exclude
     private Boolean attended;
-
 }

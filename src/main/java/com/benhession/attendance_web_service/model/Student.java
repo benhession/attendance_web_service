@@ -26,6 +26,4 @@ public class Student {
 
     @OneToMany(mappedBy = "student")
     private Set<StudentUniversityClass> classes;
-
-
 }

@@ -1,6 +1,5 @@
 package com.benhession.attendance_web_service.config;
 
-
 import net.minidev.json.JSONArray;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

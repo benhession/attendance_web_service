@@ -54,9 +54,5 @@ public class StudentController {
                                 .toCollection(studentUniversityClasses) , HttpStatus.OK)
         ).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
 
-
-
     }
-
-
 }
