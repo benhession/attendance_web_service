@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class StudentService {
 
-    final StudentRepository studentRepository;
-    final StudentUniversityClassRepository universityClassRepository;
+    private final StudentRepository studentRepository;
+    private final StudentUniversityClassRepository universityClassRepository;
 
     @Autowired
     public StudentService(StudentRepository studentRepository, StudentUniversityClassRepository universityClassRepository) {
@@ -20,11 +21,16 @@ public class StudentService {
         this.universityClassRepository = universityClassRepository;
     }
 
-    public Set<StudentUniversityClass> universityClassesOfRequester(String studentId) {
+    public Set<StudentUniversityClass> studentClassesOfRequester(String studentId) {
         Set<StudentUniversityClass> classes =
                 universityClassRepository.findStudentUniversityClassByStudent_StudentId(studentId);
 
         return classes.isEmpty() ? null : classes;
+    }
+
+    public Optional<StudentUniversityClass> studentClassByQRString(String qrString, String studentId) {
+        return universityClassRepository.findStudentUniversityClassByUniversityClass_QrStringAndStudent_StudentId(
+                qrString, studentId);
     }
 
     public Boolean existsById(String studentId) {

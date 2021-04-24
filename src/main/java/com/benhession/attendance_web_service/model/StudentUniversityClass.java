@@ -13,14 +13,22 @@ import javax.persistence.*;
 public class StudentUniversityClass {
 
     @Id
+    @Column(name = "student_id")
+    @JsonIgnore
+    private String studentId;
+
+    @Id
+    @Column(name = "class_id")
+    @JsonIgnore
+    private String universityClassId;
+
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id")
+    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
     @JsonIgnore
     private Student student;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "class_id", referencedColumnName = "class_id")
+    @JoinColumn(name = "class_id", referencedColumnName = "class_id", insertable = false, updatable = false)
     private UniversityClass universityClass;
 
     @Column(name = "attended")

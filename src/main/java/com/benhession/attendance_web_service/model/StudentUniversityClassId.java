@@ -7,6 +7,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class StudentUniversityClassId implements Serializable {
 
-    private Student student;
-    private UniversityClass universityClass;
+    protected String studentId;
+    protected String universityClassId;
 }
