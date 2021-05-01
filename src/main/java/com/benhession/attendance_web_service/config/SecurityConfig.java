@@ -24,8 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests(auth -> auth
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .antMatchers("/class/qrcode").permitAll() // TODO: Only allow tutors
-                        .antMatchers("/student/classes", "/student/attend")
+                        .antMatchers("/class/qrcode")
+                            .access("hasRole('attendance_tutor') and hasAuthority('SCOPE_web_client')")
+                        .antMatchers("/student/classes", "/student/attend", "/home")
                             .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
