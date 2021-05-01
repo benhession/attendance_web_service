@@ -13,7 +13,7 @@ public class StudentUniversityClassService {
         this.repository = repository;
     }
 
-    public boolean save(StudentUniversityClass theClass) {
-        return repository.save(theClass).getAttended();
+    public StudentUniversityClass save(StudentUniversityClass theClass) {
+        return repository.save(theClass);
     }
 }
