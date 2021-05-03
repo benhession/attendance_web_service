@@ -63,8 +63,12 @@ public class StudentController {
             LocalDateTime currentTime = LocalDateTime.now();
 
             if (startTime.isBefore(currentTime) && endTime.isAfter(currentTime)) {
-                c.setAttended(true);
-                return ResponseEntity.ok(classService.save(c).getAttended());
+                if (!c.getAttended()) {
+                    c.setAttended(true);
+                    return ResponseEntity.ok(classService.save(c).getAttended());
+                } else {
+                    return ResponseEntity.ok(false);
+                }
             } else {
                 return new ResponseEntity<>(null, HttpStatus.PRECONDITION_FAILED);
             }

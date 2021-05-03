@@ -29,7 +29,7 @@ insert into class (class_id, class_name, location, date_time, duration,
 insert into student_class (student_id, class_id, attended) values
     ('yarrowp3138', 'TM4702101', true),
     ('yarrowp3138', 'TM4702102', true),
-    ('yarrowp3138', 'TM4702103', false),
+    ('yarrowp3138', 'TM4702103', true),
     ('yarrowp3138', 'TM3512001', true),
     ('traversm0936', 'TM4702101', false),
     ('traversm0936', 'TM4702102', true),

@@ -196,7 +196,7 @@ public class StudentControllerTest {
 
     /**
      * Fulfills the confirmation "The attendance record is updated" and part of the confirmation "The student is
-     * notified od success".
+     * notified of success".
      * @throws Exception if test fails
      */
     @Test
@@ -211,6 +211,19 @@ public class StudentControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andDo(mvcResult -> Assertions.assertThat(mvcResult.getResponse().getContentAsString())
                         .isEqualTo("true"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "yarrowp3138")
+    public void attendReturnsFalseIfAttendedIsTrue() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/student/attend")
+                .param("qrString", "BB52F36E1C9E10909733B2FCA23290FA")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andDo(mvcResult -> Assertions.assertThat(mvcResult.getResponse().getContentAsString())
+                        .isEqualTo("false"));
     }
 
     /**
