@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -36,16 +37,16 @@ public class StudentControllerTest {
         for (UniversityClass aClass: classSet) {
             switch (aClass.getClassId()) {
                 case "TM4702101":
-                    aClass.setDateTime(LocalDateTime.now().minusWeeks(2));
+                    aClass.setDateTime(LocalDateTime.now(ZoneId.of("UTC")).minusWeeks(2));
                     break;
                 case "TM4702102":
-                    aClass.setDateTime(LocalDateTime.now().minusWeeks(1));
+                    aClass.setDateTime(LocalDateTime.now(ZoneId.of("UTC")).minusWeeks(1));
                     break;
                 case "TM4702103":
-                    aClass.setDateTime(LocalDateTime.now());
+                    aClass.setDateTime(LocalDateTime.now(ZoneId.of("UTC")));
                     break;
                 case "TM3512001":
-                    aClass.setDateTime(LocalDateTime.now().minusYears(1));
+                    aClass.setDateTime(LocalDateTime.now(ZoneId.of("UTC")).minusYears(1));
                     break;
             }
         }

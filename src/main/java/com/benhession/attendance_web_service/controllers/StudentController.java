@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,10 +59,10 @@ public class StudentController {
 
         if(theClass.isPresent()) {
             StudentUniversityClass c = theClass.get();
-            LocalDateTime startTime = c.getUniversityClass().getDateTime();
+            ZonedDateTime startTime = ZonedDateTime.of(c.getUniversityClass().getDateTime(), ZoneId.of("UTC"));
             // can take attendance up to 15 minutes after class start time
-            LocalDateTime endTime = startTime.plusMinutes(15);
-            LocalDateTime currentTime = LocalDateTime.now();
+            ZonedDateTime endTime = startTime.plusMinutes(15);
+            ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("UTC"));
 
             if (startTime.isBefore(currentTime) && endTime.isAfter(currentTime)) {
                 if (!c.getAttended()) {
