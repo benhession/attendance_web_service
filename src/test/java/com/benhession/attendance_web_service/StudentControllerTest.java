@@ -242,6 +242,11 @@ public class StudentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
+
+    /**
+     * Fulfills part of the confirmation "The student can only attend classes that are in progress"
+     * @throws Exception if test fails
+     */
     @Test
     @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "traversm0936")
     public void cannotAttendClassThatIsNotInProgress() throws Exception {
