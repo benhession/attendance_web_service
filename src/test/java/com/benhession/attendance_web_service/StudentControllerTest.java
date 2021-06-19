@@ -244,7 +244,7 @@ public class StudentControllerTest {
 
 
     /**
-     * Fulfills part of the confirmation "The student can only attend classes that are in progress"
+     * Fulfills the confirmation "The student can only attend classes that are in progress"
      * @throws Exception if test fails
      */
     @Test
