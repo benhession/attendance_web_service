@@ -5,6 +5,7 @@ import com.benhession.attendance_web_service.data.StudentUniversityClassService;
 import com.benhession.attendance_web_service.model.StudentUniversityClass;
 import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModel;
 import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModelAssembler;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +52,10 @@ public class StudentController {
 
     }
 
-    @GetMapping(path = "/attend")
-    public ResponseEntity<Boolean> attendClass(Principal principal, @RequestParam String qrString) {
+    @PostMapping(path = "/attend", consumes = "application/json")
+    public ResponseEntity<Boolean> attendClass(Principal principal, @RequestBody JSONObject jsonObject) {
+
+        String qrString = jsonObject.get("qrString").toString();
 
         Optional<StudentUniversityClass> theClass = studentService.studentClassByQRString(qrString, principal.getName());
 

@@ -5,6 +5,7 @@ import com.benhession.attendance_web_service.model.UniversityClass;
 import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONObject;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -205,8 +206,16 @@ public class StudentControllerTest {
     public void attendanceRecordIsSetAsTrue() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/student/attend")
-                .param("qrString", "BB52F36E1C9E10909733B2FCA23290FA")
+                .post("/student/attend")
+                .contentType("application/json")
+                .content(new ObjectMapper()
+                        .writeValueAsString(new JSONObject()
+                                .appendField(
+                                        "qrString",
+                                        "BB52F36E1C9E10909733B2FCA23290FA"
+                                )
+                        )
+                )
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
@@ -218,8 +227,16 @@ public class StudentControllerTest {
     @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "yarrowp3138")
     public void attendReturnsFalseIfAttendedIsTrue() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/student/attend")
-                .param("qrString", "BB52F36E1C9E10909733B2FCA23290FA")
+                .post("/student/attend")
+                .contentType("application/json")
+                .content(new ObjectMapper()
+                        .writeValueAsString(new JSONObject()
+                                .appendField(
+                                        "qrString",
+                                        "BB52F36E1C9E10909733B2FCA23290FA"
+                                )
+                        )
+                )
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
@@ -236,8 +253,16 @@ public class StudentControllerTest {
     public void attendReturnsNoContentIfClassIsNotStudents() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/student/attend")
-                .param("qrString", "187BB4BEDFD30EF473227C8AFC5F8283")
+                .post("/student/attend")
+                        .contentType("application/json")
+                        .content(new ObjectMapper()
+                                .writeValueAsString(new JSONObject()
+                                        .appendField(
+                                                "qrString",
+                                                "187BB4BEDFD30EF473227C8AFC5F8283"
+                                        )
+                                )
+                        )
         )
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -251,8 +276,16 @@ public class StudentControllerTest {
     @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "traversm0936")
     public void cannotAttendClassThatIsNotInProgress() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/student/attend")
-                .param("qrString", "78C4100F08DDFEBDBFF91F2EF7C1ECDC")
+                .post("/student/attend")
+                .contentType("application/json")
+                .content(new ObjectMapper()
+                        .writeValueAsString(new JSONObject()
+                                .appendField(
+                                        "qrString",
+                                        "78C4100F08DDFEBDBFF91F2EF7C1ECDC"
+                                )
+                        )
+                )
         )
                 .andExpect(MockMvcResultMatchers.status().isPreconditionFailed());
     }
