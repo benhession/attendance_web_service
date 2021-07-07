@@ -1,6 +1,5 @@
 package com.benhession.attendance_web_service;
 
-import com.benhession.attendance_web_service.controllers.HomeController;
 import com.benhession.attendance_web_service.controllers.StudentController;
 import com.benhession.attendance_web_service.controllers.UniversityClassController;
 import org.junit.jupiter.api.Test;
@@ -13,9 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SmokeTest {
 
 	@Autowired
-	private HomeController homeController;
-
-	@Autowired
 	private StudentController studentController;
 
 	@Autowired
@@ -23,7 +19,6 @@ class SmokeTest {
 
 	@Test
 	void contextLoads() {
-		assertThat(homeController).isNotNull();
 		assertThat(studentController).isNotNull();
 		assertThat(universityClassController).isNotNull();
 	}

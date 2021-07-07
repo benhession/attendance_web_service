@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .antMatchers("/class/qrcode")
                             .access("hasRole('attendance_tutor') and hasAuthority('SCOPE_web_client')")
-                        .antMatchers("/student/classes", "/student/attend", "/home")
+                        .antMatchers("/student/classes", "/student/attend")
                             .access("hasRole('attendance_student') and hasAuthority('SCOPE_mobile_client')")
                         .anyRequest().authenticated()
                 )
