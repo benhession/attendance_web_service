@@ -2,6 +2,7 @@ package com.benhession.attendance_web_service.controllers;
 
 import com.benhession.attendance_web_service.data.StudentService;
 import com.benhession.attendance_web_service.data.StudentUniversityClassService;
+import com.benhession.attendance_web_service.events.AttendPublisher;
 import com.benhession.attendance_web_service.model.StudentUniversityClass;
 import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModel;
 import com.benhession.attendance_web_service.representational_models.StudentUniversityClassModelAssembler;
@@ -25,11 +26,14 @@ public class StudentController {
 
     private final StudentService studentService;
     private final StudentUniversityClassService classService;
+    private final AttendPublisher attendPublisher;
 
     @Autowired
-    public StudentController(StudentService studentService, StudentUniversityClassService classService) {
+    public StudentController(StudentService studentService, StudentUniversityClassService classService,
+                             AttendPublisher attendPublisher) {
         this.studentService = studentService;
         this.classService = classService;
+        this.attendPublisher = attendPublisher;
     }
 
     @GetMapping(value = "/classes")
@@ -69,7 +73,8 @@ public class StudentController {
             if (startTime.isBefore(currentTime) && endTime.isAfter(currentTime)) {
                 if (!c.getAttended()) {
                     c.setAttended(true);
-                    return ResponseEntity.ok(classService.save(c).getAttended());
+                    attendPublisher.publishAttendEvent(classService.save(c).getUniversityClassId());
+                    return ResponseEntity.ok(c.getAttended());
                 } else {
                     return ResponseEntity.ok(false);
                 }
