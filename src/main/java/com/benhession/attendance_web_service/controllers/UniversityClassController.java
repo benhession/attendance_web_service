@@ -37,4 +37,5 @@ public class UniversityClassController {
 
         }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
     }
+
 }

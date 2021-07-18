@@ -39,6 +39,7 @@ public class UniversityClass {
     private String classType;
 
     @Column(name = "qr_string")
+    @JsonIgnore
     private String qrString;
 
     @ManyToOne

@@ -15,10 +15,12 @@ public class UniversityModule {
 
     @Id
     @Column(name = "module_code")
+    @EqualsAndHashCode.Include
     private String moduleCode;
 
     @Id
     @Column(name = "module_year")
+    @EqualsAndHashCode.Include
     private String moduleYear;
 
     @Column(name = "module_name")
