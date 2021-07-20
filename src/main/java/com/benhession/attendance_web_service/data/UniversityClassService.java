@@ -39,4 +39,14 @@ public class UniversityClassService {
          classRepository.saveAll(classSet);
     }
 
+    public boolean classHasTutor(String classId, String tutorId) {
+        Optional<UniversityClass> theClass = classRepository.findById(classId);
+
+        if (theClass.isEmpty()) {
+            return false;
+        } else {
+            return theClass.get().getTutor().getTutorId().equals(tutorId);
+        }
+    }
+
 }

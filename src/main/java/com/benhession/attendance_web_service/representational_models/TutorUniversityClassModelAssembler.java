@@ -16,4 +16,8 @@ public class TutorUniversityClassModelAssembler {
 
         return modelSet;
     }
+
+    public static TutorUniversityClassModel toResource(UniversityClass theClass) {
+        return new TutorUniversityClassModel(theClass);
+    }
 }
