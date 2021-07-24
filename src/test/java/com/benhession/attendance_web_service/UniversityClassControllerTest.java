@@ -23,7 +23,7 @@ public class UniversityClassControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // update dates classes in order for tests to work as expected
+    // update dates of classes in order for tests to work as expected
     @BeforeAll
     static void updateDates(@Autowired UniversityClassService classService) {
         Set<UniversityClass> classSet = classService.findAll();
