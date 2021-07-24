@@ -1,7 +1,7 @@
 drop table if exists student_class, student, class, "module", tutor;
 
 create table student (
-    student_id varchar(12) not null,
+    student_id varchar(15) not null,
     forename varchar(20) not null,
     surname varchar(20) not null,
 
@@ -17,7 +17,7 @@ create table "module" (
 );
 
 create table tutor (
-    tutor_id varchar(13) not null,
+    tutor_id varchar(15) not null,
     forename varchar(20) not null,
     surname varchar(20) not null,
 
