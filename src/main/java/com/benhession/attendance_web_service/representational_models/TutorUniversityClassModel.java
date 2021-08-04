@@ -24,6 +24,8 @@ public class TutorUniversityClassModel {
 
     private String location;
 
+    private String moduleCode;
+
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateTime;
 
@@ -38,6 +40,7 @@ public class TutorUniversityClassModel {
         this.classId = universityClass.getClassId();
         this.name = universityClass.getName();
         this.location = universityClass.getLocation();
+        this.moduleCode = universityClass.getModule().getModuleCode();
         this.dateTime = universityClass.getDateTime();
         this.duration = universityClass.getDuration();
         this.classType = universityClass.getClassType();
