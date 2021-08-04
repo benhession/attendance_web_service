@@ -22,6 +22,10 @@ public class TutorControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    /**
+     * Fulfills confirmation "The attendance record matches that of each class"
+     * @throws Exception if test fails
+     */
     @Test
     @WithMockUser(authorities = {"ROLE_attendance_tutor", "SCOPE_web_client"}, username = "dylanb2441")
     public void returnsCorrectAttendanceRecordForTutor() throws Exception {
@@ -34,8 +38,7 @@ public class TutorControllerTest {
                     String content = result.getResponse().getContentAsString();
                     final ObjectMapper objectMapper = new ObjectMapper();
                     List<TutorModuleModel> returnedModels =
-                            objectMapper.readValue(content, new TypeReference<>() {
-                            });
+                            objectMapper.readValue(content, new TypeReference<>() {});
 
                     // check attendance matches data.sql
                     returnedModels.forEach(aModule -> aModule.getClasses().forEach(aClass -> {
