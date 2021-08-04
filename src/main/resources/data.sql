@@ -1,7 +1,12 @@
 insert into student (student_id, forename, surname) values
 ('yarrowp3138', 'Peter', 'Yarrow'),
 ('traversm0936', 'Mary', 'Travers'),
-('stookeyp3037', 'Paul', 'Stookey')
+('stookeyp3037', 'Paul', 'Stookey'),
+('lennonj0940', 'John', 'Lennon'),
+('mccartnp1842', 'Paul', 'McCartney'),
+('harrisog2543', 'George', 'Harrison'),
+('starrr0740', 'Ringo', 'Starr')
+
 on conflict do nothing;
 
 insert into tutor (tutor_id, forename, surname) values
@@ -11,7 +16,8 @@ on conflict do nothing;
 
 insert into module (module_code, module_year, module_name) values
     ('TM470', '2021', 'The computing and IT project'),
-    ('TM351', '2020','Data management and analysis')
+    ('TM351', '2020','Data management and analysis'),
+    ('TM354', '2021', 'Software engineering')
 on conflict do nothing;
 
 insert into class (class_id, class_name, location, date_time, duration,
@@ -23,7 +29,9 @@ insert into class (class_id, class_name, location, date_time, duration,
     ('TM4702103', 'TMA02', 'Berrill Lecture Theatre', timestamp'2021-07-15 10:30:00 UTC', interval '1 hour',
      'Lecture', 'BB52F36E1C9E10909733B2FCA23290FA', 'TM470', '2021', 'dylanb2441'),
     ('TM3512001', 'Introduction to TM351', 'Hub Theatre', timestamp'2021-07-20 19:59:00 UTC', interval '1 hour',
-     'lecture', '187BB4BEDFD30EF473227C8AFC5F8283', 'TM351', '2020', 'dylanb2441')
+     'lecture', '187BB4BEDFD30EF473227C8AFC5F8283', 'TM351', '2020', 'dylanb2441'),
+    ('TM35401', 'Introduction to TM354', 'Hub Theatre', timestamp'2021-08-04 09:58:00 UTC', interval '1 hour',
+     'lecture', 'E0A96F9650F94263C35B7CE59CA3DBB9', 'TM354', '2021', 'dylanb2441')
 
  on conflict do nothing;
 
@@ -32,7 +40,13 @@ insert into student_class (student_id, class_id, attended) values
     ('yarrowp3138', 'TM4702102', true),
     ('yarrowp3138', 'TM4702103', true),
     ('yarrowp3138', 'TM3512001', false),
+    ('yarrowp3138', 'TM35401', false),
     ('traversm0936', 'TM4702101', true),
     ('traversm0936', 'TM4702102', false),
-    ('traversm0936', 'TM4702103', false)
+    ('traversm0936', 'TM4702103', false),
+    ('traversm0936', 'TM35401', false),
+    ('lennonj0940', 'TM35401', false),
+    ('mccartnp1842', 'TM35401', false),
+    ('harrisog2543', 'TM35401', false),
+    ('starrr0740', 'TM35401', false)
 on conflict do nothing;
