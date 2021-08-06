@@ -56,7 +56,7 @@ public class StudentController {
 
     }
 
-    @PostMapping(path = "/attend", consumes = "application/json")
+    @PatchMapping(path = "/attend", consumes = "application/json")
     public ResponseEntity<Boolean> attendClass(Principal principal, @RequestBody JSONObject jsonObject) {
 
         String qrString = jsonObject.get("qrString").toString();
