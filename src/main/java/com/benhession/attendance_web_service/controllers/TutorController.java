@@ -1,9 +1,11 @@
 package com.benhession.attendance_web_service.controllers;
 
+import com.benhession.attendance_web_service.data.StudentUniversityClassService;
 import com.benhession.attendance_web_service.data.TutorService;
 import com.benhession.attendance_web_service.data.UniversityClassService;
 import com.benhession.attendance_web_service.data.UniversityModuleService;
 import com.benhession.attendance_web_service.events.AttendEvent;
+import com.benhession.attendance_web_service.model.StudentUniversityClass;
 import com.benhession.attendance_web_service.model.Tutor;
 import com.benhession.attendance_web_service.model.UniversityClass;
 import com.benhession.attendance_web_service.model.UniversityModule;
@@ -11,6 +13,7 @@ import com.benhession.attendance_web_service.representational_models.TutorModule
 import com.benhession.attendance_web_service.representational_models.TutorModuleModelAssembler;
 import com.benhession.attendance_web_service.representational_models.TutorUniversityClassModel;
 import com.benhession.attendance_web_service.representational_models.TutorUniversityClassModelAssembler;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -35,6 +40,7 @@ public class TutorController {
     private final TutorService tutorService;
     private final UniversityModuleService moduleService;
     private final UniversityClassService classService;
+    private final StudentUniversityClassService studentClassService;
 
     private final Map<String, SseEmitter> sses = new ConcurrentHashMap<>();
     private final Random random = new Random();
@@ -43,10 +49,11 @@ public class TutorController {
 
     @Autowired
     public TutorController(TutorService tutorService, UniversityModuleService moduleService,
-                           UniversityClassService classService) {
+                           UniversityClassService classService, StudentUniversityClassService studentClassService) {
         this.tutorService = tutorService;
         this.moduleService = moduleService;
         this.classService = classService;
+        this.studentClassService = studentClassService;
     }
 
     @GetMapping(path = "/classes")
@@ -63,6 +70,44 @@ public class TutorController {
         return moduleSet.map(modules -> new ResponseEntity<>(
                 TutorModuleModelAssembler.toCollection(modules), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
+    }
+
+    @PatchMapping(value = "/student-attended", consumes = "application/json")
+    public ResponseEntity<TutorUniversityClassModel> markStudentAsAttended(
+            Principal principal, @RequestBody JSONObject jsonObject) {
+
+                String tutorId = principal.getName();
+                String studentId = jsonObject.get("studentId").toString();
+                String classId = jsonObject.get("classId").toString();
+
+                Optional<StudentUniversityClass> studentClassOptional =
+                        studentClassService.findStudentClassByIds(studentId, classId);
+
+                if(studentClassOptional.isEmpty()) {
+                    return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+                } else {
+                    StudentUniversityClass studentClass = studentClassOptional.get();
+                    ZonedDateTime startTime = ZonedDateTime.of(
+                            studentClass.getUniversityClass().getDateTime(), ZoneId.of("UTC")
+                    );
+                    ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("UTC"));
+
+                    if (startTime.isAfter(currentTime)) {
+                        // class must be running or have taken place
+                        return new ResponseEntity<>(null, HttpStatus.PRECONDITION_FAILED);
+                    }
+
+                    if (studentClass.getUniversityClass().getTutor().getTutorId().equals(tutorId)) {
+                        // the class belongs to both the tutor and the student, so update attendance
+                        studentClass.setAttended(true);
+                        StudentUniversityClass c = studentClassService.save(studentClass);
+                        // and return the class
+                        return ResponseEntity.ok(TutorUniversityClassModelAssembler.toResource(c.getUniversityClass()));
+
+                    } else {
+                        return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+                    }
+                }
     }
 
     @GetMapping("/attendance-for/{classId}")

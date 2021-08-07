@@ -12,5 +12,9 @@ public interface StudentUniversityClassRepository extends
 
     Set<StudentUniversityClass> findStudentUniversityClassByStudent_StudentId(String studentId);
 
-    Optional<StudentUniversityClass> findStudentUniversityClassByUniversityClass_QrStringAndStudent_StudentId(String qrString, String studentId);
+    Optional<StudentUniversityClass> findStudentUniversityClassByUniversityClass_QrStringAndStudent_StudentId
+            (String qrString, String studentId);
+
+    Optional<StudentUniversityClass> findStudentUniversityClassByStudent_StudentIdAndUniversityClass_ClassId
+            (String studentId, String classId);
 }
