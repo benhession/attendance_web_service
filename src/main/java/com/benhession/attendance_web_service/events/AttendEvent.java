@@ -11,7 +11,7 @@ public class AttendEvent extends ApplicationEvent {
         this.classId = message;
     }
 
-    public String getMessage() {
+    public String getClassId() {
         return classId;
     }
 }

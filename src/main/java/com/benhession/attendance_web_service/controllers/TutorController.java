@@ -1,5 +1,6 @@
 package com.benhession.attendance_web_service.controllers;
 
+import com.benhession.attendance_web_service.async.SseAsyncExecutors;
 import com.benhession.attendance_web_service.data.StudentUniversityClassService;
 import com.benhession.attendance_web_service.data.TutorService;
 import com.benhession.attendance_web_service.data.UniversityClassService;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -25,10 +27,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -41,6 +40,7 @@ public class TutorController {
     private final UniversityModuleService moduleService;
     private final UniversityClassService classService;
     private final StudentUniversityClassService studentClassService;
+    private final SseAsyncExecutors asyncExecutors;
 
     private final Map<String, SseEmitter> sses = new ConcurrentHashMap<>();
     private final Random random = new Random();
@@ -49,11 +49,12 @@ public class TutorController {
 
     @Autowired
     public TutorController(TutorService tutorService, UniversityModuleService moduleService,
-                           UniversityClassService classService, StudentUniversityClassService studentClassService) {
+                           UniversityClassService classService, StudentUniversityClassService studentClassService, SseAsyncExecutors asyncExecutors) {
         this.tutorService = tutorService;
         this.moduleService = moduleService;
         this.classService = classService;
         this.studentClassService = studentClassService;
+        this.asyncExecutors = asyncExecutors;
     }
 
     @GetMapping(path = "/classes")
@@ -72,6 +73,7 @@ public class TutorController {
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
     }
 
+    @Transactional
     @PatchMapping(value = "/student-attended", consumes = "application/json")
     public ResponseEntity<TutorUniversityClassModel> markStudentAsAttended(
             Principal principal, @RequestBody JSONObject jsonObject) {
@@ -119,11 +121,33 @@ public class TutorController {
                     .concat("_")
                     .concat(Integer.toString(random.nextInt()));
 
-            sses.put(sseKey, sseEmitter);
-            sseEmitter.onCompletion(() -> {
-                sses.remove(classId);
-                logger.info(String.format("SSE Emitter \"%s\" timed out and it's reference was removed", sseKey));
+            sses.keySet().forEach( key -> {
+                if (key.equals(sseKey)) {
+                    sses.get(key).complete();
+                    sses.remove(key);
+                }
             });
+
+            sses.put(sseKey, sseEmitter);
+
+            sseEmitter.onCompletion(() -> {
+                sses.remove(sseKey);
+                logger.info(String.format("SSE Emitter \"%s\" completed and it's reference was removed", sseKey));
+            });
+
+            sseEmitter.onError(e -> {
+                logger.warning("Error on emitter: ".concat(sseKey));
+                sseEmitter.complete();
+            });
+
+            sseEmitter.onTimeout(() -> {
+                sses.remove(sseKey);
+                sseEmitter.complete();
+            });
+
+            // keep connection alive
+            asyncExecutors.pingSseEmitter(sseEmitter, sseKey);
+
             return sseEmitter;
         } else {
             return null;
@@ -133,10 +157,9 @@ public class TutorController {
     @EventListener
     public void attendEventListener(AttendEvent attendEvent) {
 
-        logger.info("Received Attend event: " + attendEvent.getMessage());
+        logger.info("Received Attend event: classId= " + attendEvent.getClassId());
 
-        String classId = attendEvent.getMessage();
-        System.out.println(classId);
+        String classId = attendEvent.getClassId();
 
         for (String key: sses.keySet()) {
             if (key.split("_")[0].equals(classId)) {
@@ -148,9 +171,12 @@ public class TutorController {
                         .orElseThrow(() -> new RuntimeException("Unable to get UniversityClass"));
 
                 try {
+                    logger.info("sending to sse: ".concat(key));
                     sses.get(key).send(theClass);
                 } catch (IOException e) {
-                    throw new RuntimeException("Unable to send sse");
+                    logger.warning("Unable to update sse: ".concat(key).concat(" ").concat(e.getMessage()));
+                    logger.info("Removing sse: ".concat(key));
+                    sses.get(key).complete();
                 }
             }
         }

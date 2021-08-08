@@ -30,7 +30,7 @@ insert into class (class_id, class_name, location, date_time, duration,
      'Lecture', 'BB52F36E1C9E10909733B2FCA23290FA', 'TM470', '2021', 'dylanb2441'),
     ('TM3512001', 'Introduction to TM351', 'Hub Theatre', timestamp'2021-07-20 19:59:00 UTC', interval '1 hour',
      'lecture', '187BB4BEDFD30EF473227C8AFC5F8283', 'TM351', '2020', 'dylanb2441'),
-    ('TM35401', 'Introduction to TM354', 'Hub Theatre', timestamp'2021-08-04 13:11:00 UTC', interval '1 hour',
+    ('TM35401', 'Introduction to TM354', 'Hub Theatre', timestamp'2021-08-08 21:21:00 UTC', interval '1 hour',
      'lecture', 'E0A96F9650F94263C35B7CE59CA3DBB9', 'TM354', '2021', 'dylanb2441'),
     ('TM35402', 'What is Software Engineering?', 'Hub Theatre', timestamp'2021-08-14 10:00:00 UTC', interval '1 hour',
      'lecture', '70704F5DFB5CB49AF03499E4293EFE75', 'TM354', '2021', 'dylanb2441')
