@@ -15,6 +15,8 @@ import com.benhession.attendance_web_service.representational_models.TutorModule
 import com.benhession.attendance_web_service.representational_models.TutorUniversityClassModel;
 import com.benhession.attendance_web_service.representational_models.TutorUniversityClassModelAssembler;
 import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/tutor")
@@ -45,7 +46,7 @@ public class TutorController {
     private final Map<String, SseEmitter> sses = new ConcurrentHashMap<>();
     private final Random random = new Random();
 
-    private final Logger logger = Logger.getLogger("Tutor Controller");
+    private final Logger logger = LoggerFactory.getLogger("SSE");
 
     @Autowired
     public TutorController(TutorService tutorService, UniversityModuleService moduleService,
@@ -132,11 +133,11 @@ public class TutorController {
 
             sseEmitter.onCompletion(() -> {
                 sses.remove(sseKey);
-                logger.info(String.format("SSE Emitter \"%s\" completed and it's reference was removed", sseKey));
+                logger.debug(String.format("SSE Emitter \"%s\" completed and it's reference was removed", sseKey));
             });
 
             sseEmitter.onError(e -> {
-                logger.warning("Error on emitter: ".concat(sseKey));
+                logger.debug("Error on emitter: ".concat(sseKey));
                 sseEmitter.complete();
             });
 
@@ -157,7 +158,7 @@ public class TutorController {
     @EventListener
     public void attendEventListener(AttendEvent attendEvent) {
 
-        logger.info("Received Attend event: classId= " + attendEvent.getClassId());
+        logger.debug("Received Attend event: classId= " + attendEvent.getClassId());
 
         String classId = attendEvent.getClassId();
 
@@ -174,8 +175,8 @@ public class TutorController {
                     logger.info("sending to sse: ".concat(key));
                     sses.get(key).send(theClass);
                 } catch (IOException e) {
-                    logger.warning("Unable to update sse: ".concat(key).concat(" ").concat(e.getMessage()));
-                    logger.info("Removing sse: ".concat(key));
+                    logger.debug("Unable to update sse: ".concat(key).concat(" ").concat(e.getMessage()));
+                    logger.debug("Removing sse: ".concat(key));
                     sses.get(key).complete();
                 }
             }
