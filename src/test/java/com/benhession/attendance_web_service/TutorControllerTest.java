@@ -76,4 +76,37 @@ public class TutorControllerTest {
                     }));
                 });
     }
+
+    /**
+     * Fulfills part of the confirmation "Tutors can log in, other user types cannot"
+     * @throws Exception if test fails
+     */
+    @Test
+    @WithMockUser(authorities = {"ROLE_attendance_tutor", "SCOPE_web_client"}, username = "dylanb2441")
+    public void tutorsCanGetClasses() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tutor/classes"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    /**
+     * Fulfills part of the confirmation "Tutors can log in, other user types cannot"
+     * @throws Exception if test fails
+     */
+    @Test
+    @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_web_client"}, username = "yarrowp3138")
+    public void studentsCannotGetClasses() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tutor/classes"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    /**
+     * Fulfills part of the confirmation "Tutors can log in, other user types cannot"
+     * @throws Exception if test fails
+     */
+    @Test
+    @WithMockUser(authorities = {"ROLE_attendance_tutor", "SCOPE_mobile_client"}, username = "dylanb2441")
+    public void userMustHaveWebClientScope() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tutor/classes"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
 }
