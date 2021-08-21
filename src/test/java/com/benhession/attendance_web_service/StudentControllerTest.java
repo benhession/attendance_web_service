@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class StudentControllerTest {
@@ -137,7 +139,7 @@ public class StudentControllerTest {
                     List<StudentUniversityClassModel> classModels =
                             objectMapper.readValue(content, new TypeReference<>() {});
                     Set<String> expectedIds = new HashSet<>(Arrays.asList("TM4702101", "TM4702102", "TM4702103",
-                            "TM3512001"));
+                            "TM3512001", "TM3542101"));
                     Set<String> actualIds = new HashSet<>();
 
                     classModels.forEach(model -> actualIds.add(model.getClassId()));
@@ -168,7 +170,7 @@ public class StudentControllerTest {
                     List<StudentUniversityClassModel> classModels =
                             objectMapper.readValue(content, new TypeReference<>() {});
                     Set<String> expectedIds = new HashSet<>(
-                            Arrays.asList("TM4702101", "TM4702102", "TM4702103")
+                            Arrays.asList("TM4702101", "TM4702102", "TM4702103", "TM3542101", "TM3542102")
                     );
                     Set<String> actualIds = new HashSet<>();
 
@@ -206,7 +208,7 @@ public class StudentControllerTest {
     public void attendanceRecordIsSetAsTrue() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/student/attend")
+                .patch("/student/attend").with(csrf())
                 .contentType("application/json")
                 .content(new ObjectMapper()
                         .writeValueAsString(new JSONObject()
@@ -227,7 +229,7 @@ public class StudentControllerTest {
     @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "yarrowp3138")
     public void attendReturnsFalseIfAttendedIsTrue() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/student/attend")
+                .patch("/student/attend").with(csrf())
                 .contentType("application/json")
                 .content(new ObjectMapper()
                         .writeValueAsString(new JSONObject()
@@ -253,7 +255,7 @@ public class StudentControllerTest {
     public void attendReturnsNoContentIfClassIsNotStudents() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/student/attend")
+                .patch("/student/attend").with(csrf())
                         .contentType("application/json")
                         .content(new ObjectMapper()
                                 .writeValueAsString(new JSONObject()
@@ -276,7 +278,7 @@ public class StudentControllerTest {
     @WithMockUser(authorities = {"ROLE_attendance_student", "SCOPE_mobile_client"}, username = "traversm0936")
     public void cannotAttendClassThatIsNotInProgress() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/student/attend")
+                .patch("/student/attend").with(csrf())
                 .contentType("application/json")
                 .content(new ObjectMapper()
                         .writeValueAsString(new JSONObject()
