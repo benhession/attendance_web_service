@@ -22,17 +22,17 @@ on conflict do nothing;
 
 insert into class (class_id, class_name, location, date_time, duration,
                    class_type, qr_string, module_code, module_year, tutor_id) values
-    ('TM4702101', 'Introduction to TM470', 'Berrill Lecture Theatre', timestamp'2021-03-29 10:00:00 UTC',
+    ('TM4702101', 'Introduction to TM470', 'Berrill Lecture Theatre', timestamp'2021-03-29 10:00:00+0000',
      interval '1 hour', 'Lecture', '78C4100F08DDFEBDBFF91F2EF7C1ECDC', 'TM470', '2021', 'dylanb2441'),
-    ('TM4702102', 'TMA01', 'Berrill Lecture Theatre', timestamp'2021-05-15 14:00:00 UTC', interval '1 hour',
+    ('TM4702102', 'TMA01', 'Berrill Lecture Theatre', timestamp'2021-05-15 14:00:00+0000', interval '1 hour',
      'Lecture', '21312ED8F6820DED94188D177A73170E', 'TM470', '2021', 'dylanb2441'),
-    ('TM4702103', 'TMA02', 'Berrill Lecture Theatre', timestamp'2021-07-15 10:30:00 UTC', interval '1 hour',
+    ('TM4702103', 'TMA02', 'Berrill Lecture Theatre', timestamp'2021-07-15 10:30:00+0000', interval '1 hour',
      'Lecture', 'BB52F36E1C9E10909733B2FCA23290FA', 'TM470', '2021', 'dylanb2441'),
-    ('TM3512001', 'Introduction to TM351', 'Hub Theatre', timestamp'2021-07-20 19:59:00 UTC', interval '1 hour',
+    ('TM3512001', 'Introduction to TM351', 'Hub Theatre', timestamp'2021-07-20 19:59:00+0000', interval '1 hour',
      'lecture', '187BB4BEDFD30EF473227C8AFC5F8283', 'TM351', '2020', 'dylanb2441'),
-    ('TM3542101', 'Introduction to TM354', 'Hub Theatre', timestamp'2021-08-14 15:57:00 UTC', interval '1 hour',
+    ('TM3542101', 'Introduction to TM354', 'Hub Theatre', timestamp'2021-08-14 15:57:00+0000', interval '1 hour',
      'lecture', 'E0A96F9650F94263C35B7CE59CA3DBB9', 'TM354', '2021', 'dylanb2441'),
-    ('TM3542102', 'What is Software Engineering?', 'Hub Theatre', timestamp'2021-08-18 10:00:00 UTC', interval '1 hour',
+    ('TM3542102', 'What is Software Engineering?', 'Hub Theatre', timestamp'2021-08-22 11:55:00+0000', interval '1 hour',
      'lecture', '70704F5DFB5CB49AF03499E4293EFE75', 'TM354', '2021', 'dylanb2441')
 
  on conflict do nothing;
